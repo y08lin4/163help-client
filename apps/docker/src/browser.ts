@@ -65,16 +65,16 @@ export class DockBrowser {
   }
 
   async play(musicId: string, _durationMs: number): Promise<boolean> {
-    const r = await this.page.evaluate((id) => window.__mhPlayer.play(id), musicId);
+    const r = await this.page.evaluate((id: string) => (window as any).__mhPlayer.play(id), musicId);
     return Boolean(r?.ok);
   }
 
   async progress(): Promise<{ playedMs: number; durationMs: number }> {
-    return await this.page.evaluate(() => window.__mhPlayer.progress());
+    return await this.page.evaluate(() => (window as any).__mhPlayer.progress());
   }
 
   async stop(): Promise<void> {
-    await this.page.evaluate(() => window.__mhPlayer.stop()).catch(() => {});
+    await this.page.evaluate(() => (window as any).__mhPlayer.stop()).catch(() => {});
   }
 
   async close(): Promise<void> {
