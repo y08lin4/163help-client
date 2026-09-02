@@ -13,7 +13,66 @@ export class MhPanel extends HTMLElement {
     super();
     const root = this.attachShadow({ mode: 'open' });
     root.innerHTML = TEMPLATE.replace('$TOKENS$', tokens);
-    this.bind(root);\n    requestAnimationFrame(() => this.toggle(true)); // v4 常驻：默认展开\n  }
+    this.bind(root);
+    requestAnimationFrame(() => this.toggle(true)); // v4 常驻：默认展开
+    this.attachDrag(root);
+    this.restorePos(root);
+    this.armAutoCollapse();
+  }
+
+  /* —— v4：拖动吸附（右上/右中/右下三档 + localStorage 记忆）—— */
+  private attachDrag(root: ShadowRoot) {
+    const grip = root.querySelector('[data-grip]') as HTMLElement;
+    const panel = root.querySelector('.panel') as HTMLElement;
+    if (!grip || !panel) return;
+    grip.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      const startX = e.clientX, startY = e.clientY;
+      const r = panel.getBoundingClientRect();
+      const move = (ev: PointerEvent) => {
+        panel.style.right = 'auto';
+        panel.style.top = 'auto';
+        panel.style.left = `${Math.max(8, r.left + ev.clientX - startX)}px`;
+        panel.style.top = `${Math.max(8, r.top + ev.clientY - startY)}px`;
+      };
+      const up = () => {
+        window.removeEventListener('pointermove', move);
+        window.removeEventListener('pointerup', up);
+        const rect = panel.getBoundingClientRect();
+        const vh = window.innerHeight;
+        const snappedTop = rect.top < vh * 0.38 ? 66 : rect.bottom > vh * 0.62 ? vh - rect.height - 12 : vh * 0.42;
+        const right = Math.max(8, window.innerWidth - rect.right);
+        panel.style.left = 'auto'; panel.style.top = 'auto';
+        panel.style.right = `${right}px`; panel.style.top = `${Math.round(snappedTop)}px`;
+        localStorage.setItem('mh-panel-pos', JSON.stringify({ right, top: Math.round(snappedTop) }));
+      };
+      window.addEventListener('pointermove', move);
+      window.addEventListener('pointerup', up);
+    });
+  }
+  private restorePos(root: ShadowRoot) {
+    try {
+      const p = JSON.parse(localStorage.getItem('mh-panel-pos') || 'null');
+      if (p && typeof p.right === 'number') {
+        const panel = root.querySelector('.panel') as HTMLElement;
+        const ball = root.querySelector('.ball') as HTMLElement;
+        for (const el of [panel, ball]) {
+          el.style.top = `${p.top}px`; el.style.right = `${p.right}px`;
+        }
+      }
+    } catch { /* 忽略损坏记忆 */ }
+  }
+  /* —— v4：5 分钟无操作自动收起（state.autoCollapse === false 时关闭）—— */
+  private armAutoCollapse() {
+    const t = () => {
+      if (this.state.autoCollapse !== false) this.toggle(false);
+      this.poke();
+    };
+    this.poke();
+    setInterval(t, 300000);
+  }
+  private lastPoke = 0;
+  private poke() { this.lastPoke = Date.now(); }
 
   private bind(root: ShadowRoot) {
     const q = (s: string) => root.querySelector(s) as HTMLElement;
@@ -23,6 +82,8 @@ export class MhPanel extends HTMLElement {
     q('[data-diag]')?.addEventListener('click', () => this.dispatchEvent(new CustomEvent('mh:diagnose')));
     q('[data-exit]')?.addEventListener('click', () => this.dispatchEvent(new CustomEvent('mh:logout')));
     q('[data-abandon]')?.addEventListener('click', () => this.dispatchEvent(new CustomEvent('mh:abandon')));
+    q('[data-settoggle]')?.addEventListener('click', () => { const s = root.querySelector('[data-settings]'); if (s) s.classList.toggle('hidden'); const cb = root.querySelector('[data-autocollapse]'); if (cb) (cb as HTMLInputElement).checked = this.state.autoCollapse !== false; });
+    (root.querySelector('[data-autocollapse]') as HTMLInputElement | null)?.addEventListener('change', (e) => { this.state.autoCollapse = (e.target as HTMLInputElement).checked; });
     q('[data-goset]')?.addEventListener('click', () => this.dispatchEvent(new CustomEvent('mh:open-settings')));
   }
 
