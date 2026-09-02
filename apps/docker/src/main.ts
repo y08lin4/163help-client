@@ -5,7 +5,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { ClientRuntime } from '@163help/core';
+import { ClientRuntime } from '../../../packages/core/src/index.ts';
 import { DockBrowser } from './browser.js';
 import { createStatusServer } from './server.js';
 

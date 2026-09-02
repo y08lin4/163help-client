@@ -2,8 +2,8 @@
  * content script：注入面板 + PlatformAdapter（chrome.storage.local）+ 播放器适配
  * 与 userscript 端同构（仅存储/生命周期适配不同）；构建时由 esbuild 打包进 content.js
  */
-import { ClientRuntime } from '@163help/core';
-import { mountPanel } from '@163help/ui';
+import { ClientRuntime } from '../../../packages/core/src/index.ts';
+import { mountPanel } from '../../../packages/ui/src/index.ts';
 
 const BASE = 'https://163music.linyu.qzz.io';
 

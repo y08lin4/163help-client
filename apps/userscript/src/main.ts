@@ -2,8 +2,8 @@
  * 油猴端入口：mount <mh-panel> + PlatformAdapter(GM 存储) + ApiTransport + 网易云播放器适配
  * 构建：esbuild bundle → dist/music-help.user.js（单文件，CI 执行；本地 node --check）
  */
-import { ClientRuntime } from '@163help/core';
-import { mountPanel } from '@163help/ui';
+import { ClientRuntime } from '../../../packages/core/src/index.ts';
+import { mountPanel } from '../../../packages/ui/src/index.ts';
 
 const GM: any = globalThis;
 
@@ -37,7 +37,7 @@ const adapter = {
 };
 
 /* ---------- API 传输（fetch + 签名 + 401→refresh→重试） ---------- */
-import { buildSignHeaders, subtleHmac, browserNonce } from '@163help/core';
+import { buildSignHeaders, subtleHmac, browserNonce } from '../../../packages/core/src/index.ts';
 
 async function api<T>(method: string, path: string, body?: unknown, token = storage.getToken()): Promise<{ status: number; payload: T | null }> {
   const fullUrl = BASE + path;
