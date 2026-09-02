@@ -52,8 +52,7 @@ poll();setInterval(poll,2000);
 <button id="btn" onclick="login()">登录</button></div>
 <script>
 async function login(){const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:document.getElementById('pw').value})});
-const d=await r.json();if(d.ok){localStorage.setItem('ui_token',d.token);location.reload();}else alert('密码错误');}
-const t=localStorage.getItem('ui_token');if(t){window.__uiToken=t;fetch(location.pathname,{headers:{'X-UI-Token':t}}).then(()=>location.reload()).catch(()=>{});}
+const d=await r.json();if(d.ok){location.reload();}else alert('密码错误');}
 </script>`}
 </div></body></html>`;
 }
