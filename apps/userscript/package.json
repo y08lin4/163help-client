@@ -1,6 +1,6 @@
 {
   "name": "@163help/userscript",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "type": "module",
   "private": true,
   "scripts": {

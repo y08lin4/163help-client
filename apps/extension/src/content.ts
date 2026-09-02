@@ -21,7 +21,7 @@ const storage = {
 };
 
 const adapter = {
-  clientType: 'extension', version: '5.0.1', storage,
+  clientType: 'extension', version: '5.0.2', storage,
   probeNetwork: async () => true, hasPage: true,
   onLifecycle: (h: 'freeze' | 'resume', cb: () => void) => {
     if (h === 'freeze') {
@@ -37,7 +37,7 @@ async function api<T>(method: string, path: string, body?: unknown, token = ''):
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
   if (token) headers['Authorization'] = `Bearer ${token}`;
   const res = await fetch(BASE + path, {
-    method, headers: { ...headers, 'X-Music-Helper-Version': '5.0.1', 'X-Client-Type': 'extension' },
+    method, headers: { ...headers, 'X-Music-Helper-Version': '5.0.2', 'X-Client-Type': 'extension' },
     body: body === undefined ? undefined : JSON.stringify(body),
   });
   const payload = res.status === 200 ? await res.json().catch(() => null) : null;

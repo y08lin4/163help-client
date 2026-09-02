@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "网易云音乐互助播放脚本",
   "description": "网易云音乐互助播放（Chrome MV3 扩展版）：登录、互助调度、自动播放与播放进度心跳。",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "permissions": ["storage", "tabs", "scripting"],
   "host_permissions": ["https://music.163.com/*", "https://163music.linyu.qzz.io/*"],
   "background": { "service_worker": "background.js" },
