@@ -5,7 +5,7 @@
 import { ClientRuntime } from '@163help/core';
 import { mountPanel } from '@163help/ui';
 
-const GM = (typeof GM_getValue === 'function' ? globalThis : unsafeWindow);
+const GM: any = globalThis;
 
 const BASE = 'https://163music.linyu.qzz.io';
 
