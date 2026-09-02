@@ -34,7 +34,7 @@ cp apps/extension/src/manifest.json build/extension/manifest.json
 cp apps/extension/src/background.js build/extension/background.js
 cp apps/extension/content.bundle.js build/extension/content.js
 cp apps/extension/src/popup.html build/extension/popup.html
-(cd build && zip -r ../../dist/163help-extension-v$VERSION.zip extension)
+(cd build && zip -r ../dist/163help-extension-v$VERSION.zip extension)
 
 echo "[4/4] done → dist/"
 ls -la dist/
