@@ -2,7 +2,7 @@ name: Release client 5.x
 
 on:
   push:
-    tags: ['v5*', 'docker-v5*']
+    tags: ['v5*']
 
 permissions:
   contents: write
