@@ -1,0 +1,30 @@
+name: Release client 5.x
+
+on:
+  push:
+    tags: ['v5*', 'docker-v5*']
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: Build artifacts
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          bash scripts/release.sh
+      - name: Attach to GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          gh release create "${GITHUB_REF_NAME}" \
+            --title "客户端 $VERSION" \
+            --notes "网易云音乐互助客户端 $VERSION（油猴/扩展；Docker 镜像见 ghcr.io/y08lin4/163music-help/docker-client）" \
+            dist/music-help.user.js dist/163help-extension-v${VERSION}.zip || \
+          gh release upload "${GITHUB_REF_NAME}" dist/music-help.user.js "dist/163help-extension-v${VERSION}.zip" --clobber
