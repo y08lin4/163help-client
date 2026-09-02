@@ -7,7 +7,7 @@
  */
 import http from 'node:http';
 import crypto from 'node:crypto';
-import { buildPage } from './page.js';
+import { buildPage } from './page.ts';
 
 export function createStatusServer({ port, state }: { port: number; state: { [k: string]: any } }) {
   const sessions = new Map<string, number>(); // token -> exp

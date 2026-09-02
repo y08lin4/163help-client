@@ -6,8 +6,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { ClientRuntime } from '../../../packages/core/src/index.ts';
-import { DockBrowser } from './browser.js';
-import { createStatusServer } from './server.js';
+import { DockBrowser } from './browser.ts';
+import { createStatusServer } from './server.ts';
 
 const DATA_DIR = process.env.DATA_DIR || '/data';
 const BASE = process.env.API_BASE || 'https://163music.linyu.qzz.io';
