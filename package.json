@@ -1,6 +1,6 @@
 {
   "name": "163help-client",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "private": true,
   "description": "网易云音乐互助客户端 monorepo（油猴/扩展/Docker 三端共享核心与设计系统）",
   "scripts": {

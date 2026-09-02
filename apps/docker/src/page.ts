@@ -83,7 +83,7 @@ ${isAuthed ? `
     <div class="nav" data-v="log">🧾 日志</div>
     <div class="nav" data-v="cfg">⚙ 设置</div>
     <div class="nav" data-v="diag">🩺 诊断</div>
-    <div class="foot"><span id="footver">v5.0.2</span><br/><span id="footup">—</span><br/><b onclick="doLogout()">退出</b></div>
+    <div class="foot"><span id="footver">v5.0.3</span><br/><span id="footup">—</span><br/><b onclick="doLogout()">退出</b></div>
   </div>
   <div class="main">
 
@@ -191,7 +191,7 @@ poll(); setInterval(()=>poll(false),2000);
 <div class="dock" style="max-width:400px;margin:10vh auto">
   <div class="side" style="width:100%;flex-direction:row;padding:12px 16px;border-right:none;border-bottom:1px solid var(--line)">
     <div class="logo" style="padding:0"><span class="logo-ic">♪</span>网易云音乐互助</div>
-    <div class="sp" style="flex:1"></div><span class="tip">v5.0.2</span>
+    <div class="sp" style="flex:1"></div><span class="tip">v5.0.3</span>
   </div>
   <div class="main" style="padding:22px">
     <div style="font-weight:700;margin-bottom:12px">🔐 请输入管理密码</div>

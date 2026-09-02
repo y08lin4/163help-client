@@ -57,7 +57,7 @@ export function createStatusServer({ port, state }: { port: number; state: { [k:
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({
             uptime: Math.floor((Date.now() - state.startedAt) / 1000),
-            version: '5.0.2',
+            version: '5.0.3',
             job: state.job, hbIntervals: state.hbIntervals,
             helpUsed: state.helpUsed, helpLimit: state.helpLimit,
             recv: state.recv, recvLimit: state.recvLimit,

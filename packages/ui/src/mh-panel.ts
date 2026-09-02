@@ -13,8 +13,7 @@ export class MhPanel extends HTMLElement {
     super();
     const root = this.attachShadow({ mode: 'open' });
     root.innerHTML = TEMPLATE.replace('$TOKENS$', tokens);
-    this.bind(root);
-  }
+    this.bind(root);\n    requestAnimationFrame(() => this.toggle(true)); // v4 常驻：默认展开\n  }
 
   private bind(root: ShadowRoot) {
     const q = (s: string) => root.querySelector(s) as HTMLElement;
@@ -85,11 +84,11 @@ const TEMPLATE = `
 <style>
 $TOKENS$
   :host{--mh-r:16px;--mh-sh:0 2px 6px rgba(35,38,46,.05),0 12px 32px rgba(35,38,46,.08)}
-  .panel{position:fixed;right:16px;bottom:96px;z-index:2147483000;width:330px;background:var(--mh-card);
+  .panel{position:fixed;right:18px;top:66px;z-index:2147483000;width:330px;background:var(--mh-card);
     border-radius:var(--mh-r);box-shadow:var(--mh-sh);overflow:hidden;font-family:var(--mh-font);
     color:var(--mh-t1);font-size:13px;transform:translateX(370px);opacity:0;transition:all .22s ease}
   .panel.open{transform:none;opacity:1}
-  .ball{position:fixed;right:16px;bottom:96px;z-index:2147483000;width:44px;height:44px;border-radius:50%;
+  .ball{position:fixed;right:18px;top:66px;z-index:2147483000;width:44px;height:44px;border-radius:50%;
     background:var(--mh-red);color:#fff;display:flex;align-items:center;justify-content:center;
     box-shadow:0 4px 12px rgba(236,65,65,.35);cursor:pointer;font-size:19px}
   .ic{width:26px;height:26px;border-radius:8px;background:var(--mh-red);display:flex;align-items:center;
