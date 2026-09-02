@@ -21,4 +21,4 @@ ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 VOLUME ["/data"]
 EXPOSE 3000
 LABEL org.opencontainers.image.version=5.0.0
-CMD ["node", "dist/main.js"]
+CMD ["node", "apps/docker/dist/main.js"]
