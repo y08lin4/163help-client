@@ -7,5 +7,5 @@
     "start": "node --experimental-strip-types src/main.ts",
     "build": "node -e \"console.log('docker 为 Node 运行形态，无需前端构建')\""
   },
-  "dependencies": { "playwright-core": "^1.47.0" }
+  "dependencies": { "playwright-core": "1.47.0" }
 }
