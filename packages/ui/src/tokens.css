@@ -1,0 +1,45 @@
+/* 网易云风设计令牌（白卡红标）——亮/暗
+   与 docs/CLIENT_RECONSTRUCTION_PLAN.md §5 对齐 */
+:host {
+  --mh-red: #EC4141;
+  --mh-bg: #F7F7F7;
+  --mh-card: #FFFFFF;
+  --mh-line: #E5E5E5;
+  --mh-t1: #333333;
+  --mh-t2: #999999;
+  --mh-track: #F0F0F0;
+  --mh-ok: #2ea44f;
+  --mh-warn: #f5a623;
+  --mh-danger: #e5484d;
+  --mh-radius: 12px;
+  --mh-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --mh-font: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :host {
+    --mh-bg: #1F1F1F;
+    --mh-card: #262626;
+    --mh-line: #3A3A3A;
+    --mh-t1: #EEEEEE;
+    --mh-t2: #AAAAAA;
+    --mh-track: #383838;
+  }
+}
+
+.mh-card {
+  font-family: var(--mh-font);
+  background: var(--mh-card);
+  border-radius: var(--mh-radius);
+  box-shadow: var(--mh-shadow);
+  color: var(--mh-t1);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.mh-num { font-variant-numeric: tabular-nums; }
+
+.mh-ok { color: var(--mh-ok); }
+.mh-warn { color: var(--mh-warn); }
+.mh-danger { color: var(--mh-danger); }
+.mh-muted { color: var(--mh-t2); }

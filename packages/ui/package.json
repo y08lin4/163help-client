@@ -1,0 +1,8 @@
+{
+  "name": "@163help/ui",
+  "version": "5.0.0",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": { ".": { "import": "./src/index.js" } },
+  "scripts": { "build": "node -e \"console.log('ui 为原生资产，无需构建')\"" }
+}

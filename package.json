@@ -1,0 +1,12 @@
+{
+  "name": "163help-client",
+  "version": "5.0.0",
+  "private": true,
+  "description": "网易云音乐互助客户端 monorepo（油猴/扩展/Docker 三端共享核心与设计系统）",
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "test:core": "pnpm --filter @163help/core test"
+  },
+  "engines": { "node": ">=18" }
+}

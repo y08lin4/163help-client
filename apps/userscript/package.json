@@ -1,0 +1,13 @@
+{
+  "name": "@163help/userscript",
+  "version": "5.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "esbuild src/main.ts --bundle --format=iife --outfile=dist/music-help.user.js --banner:js=\"// ==UserScript==\\n// @name        网易云音乐互助\\n// @namespace   163help\\n// @version      __VERSION__\\n// @description 3D 互助播放（油猴端）\\n// @match       https://music.163.com/*\\n// @match       https://163music.linyu.qzz.io/*\\n// @grant       GM_getValue\\n// @grant       GM_setValue\\n// @grant       unsafeWindow\\n// ==/UserScript==\"",
+    "test": "node --experimental-strip-types --check src/main.ts"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  }
+}
