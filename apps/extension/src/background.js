@@ -19,12 +19,12 @@ const ensureSheetTab = async () => {
   const tabs = await chrome.tabs.query({ url: `${SHEET_URL}*` });
   if (tabs.length > 0) { void chrome.tabs.update(tabs[0].id, { active: true }); return; }
   const tab = await chrome.tabs.create({ url: SHEET_URL, muted: true });
-  void chrome.tabs.update(tab.id!, { active: true }).catch(() => {});
+  void chrome.tabs.update(tab.id, { active: true }).catch(() => {});
 };
 
 /** 静音网易云标签（不动其它标签） */
 chrome.tabs.onCreated.addListener((tab) => {
-  if (tab.url && tab.url.startsWith('https://music.163.com/')) void chrome.tabs.update(tab.id!, { muted: true });
+  if (tab.url && tab.url.startsWith('https://music.163.com/')) void chrome.tabs.update(tab.id, { muted: true });
 });
 
 /** 周期保活：每 6 分钟 ping（SW 生命周期宽容下仍能触发） */
