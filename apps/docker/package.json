@@ -1,0 +1,14 @@
+{
+  "name": "@163help/docker",
+  "version": "5.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node src/main.js",
+    "build": "node -e \"console.log('docker 为 Node 运行形态，无需前端构建')\""
+  },
+  "dependencies": {
+    "@163help/core": "workspace:*",
+    "playwright-core": "^1.47.0"
+  }
+}
