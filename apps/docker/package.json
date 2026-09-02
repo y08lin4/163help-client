@@ -4,8 +4,13 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "node --experimental-strip-types src/main.ts",
-    "build": "node -e \"console.log('docker 为 Node 运行形态，无需前端构建')\""
+    "build": "esbuild src/main.ts --bundle --format=esm --platform=node --outfile=dist/main.js --external:playwright-core",
+    "start": "node dist/main.js"
   },
-  "dependencies": { "playwright-core": "1.47.0" }
+  "dependencies": {
+    "playwright-core": "1.47.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  }
 }
