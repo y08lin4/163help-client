@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "lib": ["ES2022", "DOM"],
+    "baseUrl": "../..",
+    "paths": {
+      "@163help/core": ["packages/core/src/index.ts"],
+      "@163help/ui": ["packages/ui/src/index.js"]
+    }
+  },
+  "include": ["src"]
+}
