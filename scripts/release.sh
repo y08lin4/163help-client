@@ -28,7 +28,7 @@ echo "[2/4] userscript bundle"
 
 echo "[3/4] extension zip"
 (cd apps/extension && npm install --no-audit >/dev/null 2>&1 || true)
-(cd apps/extension && npx esbuild src/content.js --bundle --format=iife --outfile=content.bundle.js)
+(cd apps/extension && npx esbuild src/content.ts --bundle --format=iife --outfile=content.bundle.js)
 mkdir -p build/extension
 cp apps/extension/src/manifest.json build/extension/manifest.json
 cp apps/extension/src/background.js build/extension/background.js
