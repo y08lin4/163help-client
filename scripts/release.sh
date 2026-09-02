@@ -2,7 +2,7 @@
 # 客户端 5.0 发布（CI/VPS 通用）：core build → userscript bundle → extension zip
 # 用法：VERSION=5.0.2 bash scripts/release.sh
 set -euo pipefail
-VERSION="${VERSION:-5.0.2}"
+VERSION="${VERSION:-5.0.3}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 mkdir -p dist
