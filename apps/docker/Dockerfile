@@ -15,10 +15,10 @@ RUN npm config set cache /tmp/npmcache --global && \
     npx esbuild src/main.ts --bundle --format=esm --platform=node --outfile=dist/main.js --external:playwright-core
 
 ENV NODE_ENV=production
-ENV MH_VERSION=5.0.0
+ENV MH_VERSION=5.0.1
 ENV DATA_DIR=/data
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 VOLUME ["/data"]
 EXPOSE 3000
-LABEL org.opencontainers.image.version=5.0.0
+LABEL org.opencontainers.image.version=5.0.1
 CMD ["node", "apps/docker/dist/main.js"]

@@ -1,8 +1,8 @@
 #!/bin/bash
 # 客户端 5.0 发布（CI/VPS 通用）：core build → userscript bundle → extension zip
-# 用法：VERSION=5.0.0 bash scripts/release.sh
+# 用法：VERSION=5.0.1 bash scripts/release.sh
 set -euo pipefail
-VERSION="${VERSION:-5.0.0}"
+VERSION="${VERSION:-5.0.1}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 mkdir -p dist

@@ -6,7 +6,7 @@ import { EventBus } from '../dist/events.js';
 function makeAdapter() {
   let tok = ''; const exps: Record<string, number> = {};
   return {
-    clientType: 'userscript', version: '5.0.0',
+    clientType: 'userscript', version: '5.0.1',
     storage: {
       getToken: () => tok, setToken: (t: string) => { tok = t; },
       clearToken: () => { tok = ''; },

@@ -25,7 +25,7 @@ const TEMPLATE = `
     .big { font-size:22px; font-weight:700; }
     .unit { font-size:12px; color:var(--mh-t2); font-weight:400; }
     .bar { height:4px; border-radius:2px; background:var(--mh-track); overflow:hidden; margin:8px 0 4px; }
-    .bar i { display:block; height:100%; border-radius:2px; background:var(--mh-red); }
+    .bar i { display:block; height:100%; border-radius:2px; background:var(--mh-red); transition:width .3s ease }
     .task { margin-top:16px; border-top:1px solid var(--mh-line); padding-top:12px; }
     .song { display:flex; justify-content:space-between; align-items:center; }
     .song-name { font-weight:600; }
@@ -55,7 +55,7 @@ const TEMPLATE = `
         <div class="song"><span class="song-name" data-song>—</span><span class="time" data-time>0:00 / 0:00</span></div>
         <div class="bar"><i data-taskbar style="width:0"></i></div>
         <div style="display:flex;justify-content:space-between;margin-top:6px">
-          <span class="mh-muted" data-hb>♥ 心跳 —</span>
+          <span class="mh-muted" data-hb>♥ 心跳 <span style="color:var(--mh-ok)">● 正常</span></span>
           <span class="text-btn" data-abandon>放弃本任务</span>
         </div>
       </div>
@@ -128,7 +128,7 @@ export class MhPanel extends HTMLElement {
       q('[data-song]').textContent = `▶ ${String(st.task.name ?? '—')}`;
       if (st.task.timeText) q('[data-time]').textContent = String(st.task.timeText);
       if (typeof st.task.playRatio === 'number') (q('[data-taskbar]') as HTMLElement).style.width = `${Math.round(st.task.playRatio * 100)}%`;
-      if (st.hbText !== undefined) q('[data-hb]').textContent = st.hbText === '' ? '♥ 心跳 —' : `♥ ${st.hbText}`;
+      if (st.hbText !== undefined) q('[data-hb]').textContent = st.hbText === '' ? '♥ 心跳 <span style="color:var(--mh-ok)">● 正常</span>' : `♥ ${st.hbText}`;
     } else {
       box.style.display = 'none'; taskLabel.style.display = 'none';
     }

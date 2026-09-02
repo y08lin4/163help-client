@@ -21,7 +21,7 @@ const storage = {
 /* ---------- 平台适配 ---------- */
 const adapter = {
   clientType: 'userscript',
-  version: '5.0.0',
+  version: '5.0.1',
   storage,
   probeNetwork: async () => true,
   hasPage: true,
@@ -46,7 +46,7 @@ async function api<T>(method: string, path: string, body?: unknown, token = stor
   if (token) headers['Authorization'] = `Bearer ${token}`;
   const sign = token ? await buildSignHeaders(method, fullUrl, rawBody, token, subtleHmac, browserNonce) : null;
   if (sign) { headers['X-MH-Nonce'] = sign.a; headers['X-MH-Ts'] = sign.t; headers['X-MH-Sig'] = sign.s; }
-  const res = await fetch(fullUrl, { method, headers: { ...headers, 'X-Music-Helper-Version': '5.0.0' }, body: body === undefined ? undefined : rawBody });
+  const res = await fetch(fullUrl, { method, headers: { ...headers, 'X-Music-Helper-Version': '5.0.1' }, body: body === undefined ? undefined : rawBody });
   const payload = res.status === 200 ? await res.json().catch(() => null) : null;
   return { status: res.status, payload };
 }

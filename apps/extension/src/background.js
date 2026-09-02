@@ -9,7 +9,7 @@ const SHEET_URL = 'https://music.163.com/';
 
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === 'install') {
-    void chrome.storage.local.set({ mh_install_at: Date.now(), mh_version: '5.0.0' });
+    void chrome.storage.local.set({ mh_install_at: Date.now(), mh_version: '5.0.1' });
   }
 });
 
