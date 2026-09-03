@@ -99,6 +99,24 @@ export interface ApiResult<T = unknown> {
   error?: string;
 }
 
+/** 面板限额载荷（limits:updated） */
+export interface LimitsPayload {
+  helpedToday: number;
+  helpedLimit: number;
+  receivedToday: number;
+  receivedLimit: number;
+}
+
+/** /api/me 返回（限额字段可选，缺失时由 core 用 stats 推算兜底） */
+export interface MePayload {
+  displayName: string;
+  credits: number;
+  helpedToday?: number;
+  helpedLimit?: number;
+  receivedToday?: number;
+  receivedLimit?: number;
+}
+
 /** core 对外事件（→ UI 单向） */
 export interface CoreEventMap {
   'auth:status': AuthStatus;
@@ -107,7 +125,7 @@ export interface CoreEventMap {
   'job:current': { jobId: string; musicName: string; targetMs: number; playedMs: number } | null;
   'job:progress': { jobId: string; playedMs: number; positionMs: number };
   'heartbeat:tick': { jobId: string; intervalMs: number; lastAtMs: number };
-  'limits:updated': { helpedToday: number; helpedLimit: number; receivedToday: number; receivedLimit: number };
-  'log:append': { level: LogLevel; ts: number; msg: string };
+  'limits:updated': LimitsPayload;
+  'log:append': { level: LogLevel; ts: number; msg: string; text?: string; event?: string };
   'upgrade:required': { min: string; latest: string };
 }

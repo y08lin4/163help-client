@@ -7,7 +7,7 @@ import { JobStateMachine, type CurrentJob } from './dispatch.js';
 import { HeartbeatEngine } from './heartbeat.js';
 import { ClientLogger } from './logger.js';
 import { EventBus } from './events.js';
-import type { ApiResult, ClientType, FinishInput, NextPayload, PlatformAdapter } from './types.js';
+import type { ApiResult, ClientType, FinishInput, MePayload, NextPayload, PlatformAdapter } from './types.js';
 
 /** 端侧必须提供的四件套 */
 export interface RuntimeDeps {
@@ -18,7 +18,7 @@ export interface RuntimeDeps {
     abandon(token: string, reason: string, detail: string): Promise<void>;
     heartbeat(token: string, input: { jobId: string; playedMs: number; positionMs: number; durationMs: number; monotonic: boolean }): Promise<boolean>;
     refresh(token: string): Promise<import('./types.js').LoginPayload | null>;
-    me(): Promise<ApiResult<{ displayName: string; credits: number }>>;
+    me(): Promise<ApiResult<MePayload>>;
     sendLog(payload: import('./types.js').ClientLogPayload): Promise<void>;
   };
   player: {
@@ -39,7 +39,11 @@ export class ClientRuntime {
   readonly log: ClientLogger;
 
   constructor(private deps: RuntimeDeps) {
-    this.log = new ClientLogger((p) => this.deps.transport.sendLog(p));
+    this.log = new ClientLogger((p) => this.deps.transport.sendLog(p), {
+      // B5：log:append 真正发射（每次 log.push → core bus → 面板 logCount）
+      // 载荷保持 msg/ts 兼容既有端点，额外附 text/event 供新消费方
+      onAppend: (p) => this.bus.emit('log:append', { level: p.level, ts: Date.now(), msg: p.msg, text: p.msg, event: p.event }),
+    });
     this.auth = new AuthManager(deps.adapter, {
       refresh: (t) => deps.transport.refresh(t),
       me: () => deps.transport.me(),
@@ -119,6 +123,7 @@ export class ClientRuntime {
   /** 登录页回调（oauth 成功后） */
   acceptSession(p: import('./types.js').LoginPayload): void {
     this.auth.acceptSession(p);
+    this.log.push('info', 'session', '会话已建立'); // B5：触发 log:append
     if (!this._sessionAccepted) { this._sessionAccepted = true; void this.cycle(); }
   }
 }

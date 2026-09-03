@@ -21,7 +21,7 @@ const storage = {
 /* ---------- 平台适配 ---------- */
 const adapter = {
   clientType: 'userscript',
-  version: '5.0.3',
+  version: '5.1',
   storage,
   probeNetwork: async () => true,
   hasPage: true,
@@ -46,7 +46,7 @@ async function api<T>(method: string, path: string, body?: unknown, token = stor
   if (token) headers['Authorization'] = `Bearer ${token}`;
   const sign = token ? await buildSignHeaders(method, fullUrl, rawBody, token, subtleHmac, browserNonce) : null;
   if (sign) { headers['X-MH-Nonce'] = sign.a; headers['X-MH-Ts'] = sign.t; headers['X-MH-Sig'] = sign.s; }
-  const res = await fetch(fullUrl, { method, headers: { ...headers, 'X-Music-Helper-Version': '5.0.3' }, body: body === undefined ? undefined : rawBody });
+  const res = await fetch(fullUrl, { method, headers: { ...headers, 'X-Music-Helper-Version': '5.1' }, body: body === undefined ? undefined : rawBody });
   const payload = res.status === 200 ? await res.json().catch(() => null) : null;
   return { status: res.status, payload };
 }
@@ -109,6 +109,44 @@ function fmt(ms: number): string {
   const s = Math.floor(ms / 1000);
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 }
+
+/* ---------- 错误上报（三通道之一：页面全局 error / unhandledrejection） ---------- */
+const BASE_HOST = new URL(BASE).host;
+const reportLast: Record<string, number> = {};
+function sanitize(m: string): string {
+  return String(m ?? '')
+    .replace(/MUSIC_U=[^;&\s"'`]+/gi, 'MUSIC_U=***')
+    .replace(/mh_ck_[A-Za-z0-9_-]+/gi, 'mh_ck_***')
+    .replace(/Bearer\s+\S+/gi, 'Bearer ***')
+    .replace(/[?&]token=[^&\s"'`]+/gi, 'token=***');
+}
+// 只上报本脚本错误（宁可少报不可误报）：按我们的域名 / 代码标识过滤
+function looksOurs(t: string): boolean {
+  const s = String(t ?? '');
+  return s.includes(BASE_HOST) || /mh_[a-z_]+/i.test(s)
+    || s.includes('ClientRuntime') || s.includes('mh-panel') || s.includes('@163help/core');
+}
+function reportError(ev: string, err: unknown, trace: string) {
+  const fromErr = err instanceof Error && looksOurs(err.message + ' ' + String(err.stack ?? ''));
+  if (!looksOurs(trace) && !fromErr) return;
+  let msg = '';
+  if (err instanceof Error) msg = err.message || String(err);
+  else if (typeof err === 'string') msg = err;
+  else if (err && typeof err === 'object') msg = String((err as { message?: unknown }).message ?? err);
+  else msg = String(err);
+  if (!msg) return;
+  const now = Date.now();
+  if (reportLast[ev] && now - reportLast[ev] < 5 * 60_000) return; // 同 event 5min 去抖
+  reportLast[ev] = now;
+  // 开关：GM 存储 mh_setting_logReport（默认开）
+  if (GM.GM_getValue('mh_setting_logReport', true) === false) return;
+  void transport.sendLog({ level: 'error', event: ev, msg: sanitize(msg), context: { page: location.href, rurl: location.pathname } }).catch(() => {});
+}
+window.addEventListener('error', (e) => reportError('client_error', e.error ?? e.message, `${String(e.filename ?? '')} ${String(e.message ?? '')}`));
+window.addEventListener('unhandledrejection', (e) => {
+  const r = e.reason;
+  if (r instanceof Error) reportError('promise_reject', r, `${String(r.stack ?? '')} ${String(r.message ?? '')}`);
+});
 
 void runtime.start(true);
 

@@ -37,7 +37,7 @@ export class ClientLogger {
 
   constructor(
     sink: LogSink,
-    private opts: { maxRing?: number; warnCooldownMs?: number } = {},
+    private opts: { maxRing?: number; warnCooldownMs?: number; onAppend?: (p: ClientLogPayload) => void } = {},
   ) {
     this.sink = sink;
   }
@@ -53,6 +53,7 @@ export class ClientLogger {
     this.ring.push(payload);
     const ringSize = this.opts.maxRing ?? RING_SIZE;
     if (this.ring.length > ringSize) this.ring.splice(0, this.ring.length - ringSize);
+    this.opts.onAppend?.(payload); // B5：propagate 到 core bus → 面板 logCount
     void this.schedule(payload);
   }
 

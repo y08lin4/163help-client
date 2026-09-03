@@ -3,7 +3,8 @@
  * 关键规则：401 且 refresh 失败 → 清态 + logged_out（引导重登）；网络/5xx 不清态退避重试。
  */
 import { EventBus } from './events.js';
-import type { ApiResult, AuthStatus, LoginPayload, PlatformAdapter } from './types.js';
+import { helpSecondsLimit } from './stats.js';
+import type { ApiResult, AuthStatus, LimitsPayload, LoginPayload, MePayload, PlatformAdapter } from './types.js';
 
 const REFRESH_SKEW_MS = 5000;
 const RETRY_DELAY_MS = [1000, 3000, 8000]; // 有限退避
@@ -11,7 +12,7 @@ const RETRY_DELAY_MS = [1000, 3000, 8000]; // 有限退避
 export interface AuthApi {
   login(): Promise<LoginPayload | null>;                      // 登录由平台页面完成（oauth 回跳携带票据）
   refresh(token: string): Promise<LoginPayload | null>;       // POST /auth/refresh
-  me(): Promise<ApiResult<{ displayName: string; credits: number }>>;
+  me(): Promise<ApiResult<MePayload>>;
 }
 
 export class AuthManager {
@@ -92,10 +93,36 @@ export class AuthManager {
     const r = await this.api.me();
     if (r.status === 200 && r.payload) {
       this.bus.emit('auth:user', { displayName: r.payload.displayName, credits: r.payload.credits });
+      this.emitLimitsFrom(r.payload);
     } else if (r.status === 401) {
       const refreshed = await this.refreshToken();
       if (!refreshed) this.clearSession();
     }
+  }
+
+  /** B5：me() 成功回调后发射 limits:updated（仅在数值变化时）。me() 无限额字段则用 stats.ts 推算兜底 */
+  private lastLimitsKey = '';
+  private emitLimitsFrom(p: MePayload): void {
+    const hasReal = [p.helpedToday, p.helpedLimit, p.receivedToday, p.receivedLimit].some((v) => typeof v === 'number');
+    // 兜底：无真实限额时按「代表性 300s 歌」推算 = 9000s（与面板/快照/docker 默认一致）
+    const fallbackLimit = helpSecondsLimit(300);
+    const limits: LimitsPayload = hasReal
+      ? {
+        helpedToday: p.helpedToday ?? 0,
+        helpedLimit: p.helpedLimit ?? fallbackLimit,
+        receivedToday: p.receivedToday ?? 0,
+        receivedLimit: p.receivedLimit ?? 26,
+      }
+      : {
+        helpedToday: 0,
+        helpedLimit: fallbackLimit,
+        receivedToday: 0,
+        receivedLimit: 26,
+      };
+    const key = JSON.stringify(limits);
+    if (key === this.lastLimitsKey) return;
+    this.lastLimitsKey = key;
+    this.bus.emit('limits:updated', limits);
   }
 
   /** 供 401 处理：refresh 重试；失败清态 */

@@ -1,8 +1,8 @@
-import { MhPanel } from './mh-panel.js';
+import { MhPanel, getSetting, setSetting } from './mh-panel.js';
 
 const TOKENS = String.raw$tokens;
 
-export { MhPanel };
+export { MhPanel, getSetting, setSetting };
 
 /** 一行式挂载（设计令牌已内联） */
 export function mountPanel(el = document.body) {

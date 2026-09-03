@@ -1,8 +1,8 @@
 #!/bin/bash
-# 客户端 5.0 发布（CI/VPS 通用）：core build → userscript bundle → extension zip
-# 用法：VERSION=5.0.3 bash scripts/release.sh
+# 客户端 5.1 发布（CI/VPS 通用）：core build → userscript bundle → extension zip
+# 用法：VERSION=5.1 bash scripts/release.sh
 set -euo pipefail
-VERSION="${VERSION:-5.0.3}"
+VERSION="${VERSION:-5.1}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 mkdir -p dist
@@ -34,6 +34,7 @@ cp apps/extension/src/manifest.json build/extension/manifest.json
 cp apps/extension/src/background.js build/extension/background.js
 cp apps/extension/content.bundle.js build/extension/content.js
 cp apps/extension/src/popup.html build/extension/popup.html
+cp apps/extension/src/popup.js build/extension/popup.js
 (cd build && zip -r ../dist/163help-extension-v$VERSION.zip extension)
 
 echo "[4/4] done → dist/"
